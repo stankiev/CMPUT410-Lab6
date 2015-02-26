@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.shortcuts import redirect
+import re
 
 from main.models import Link
 from main.models import Tag
@@ -36,7 +37,9 @@ def add_link(request):
         title = request.POST.get("title", "").encode("utf8")
 
         l = Link.objects.get_or_create(title=title, url=url)[0]
+        
         for tag in tags.split():
+            tag = re.sub(r'\W+', '', tag)
             t = Tag.objects.get_or_create(name=tag)[0]
             l.tags.add(t)
 
